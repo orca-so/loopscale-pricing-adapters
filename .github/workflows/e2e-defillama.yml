@@ -1,0 +1,53 @@
+name: E2E DefiLlama
+
+# Runs the real DefiLlama loopscale adapter against a pricing-adapters server
+# built from this commit, and compares the result with the deployed service
+# (see scripts/e2e_defillama.ts).
+#
+# Required repo secrets:
+#   SOLANA_RPC_URL          RPC used by the server and the adapter
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Check out DefiLlama-Adapters
+        run: |
+          git clone --depth 1 https://github.com/DefiLlama/DefiLlama-Adapters /tmp/DefiLlama-Adapters
+          cd /tmp/DefiLlama-Adapters
+          npm install --no-audit --no-fund
+
+      - name: Start pricing-adapters
+        env:
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+          HTTP_PORT: 8080
+        run: |
+          nohup npx ts-node --transpileOnly src/main.ts > /tmp/server.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf localhost:8080/ && exit 0; sleep 1; done
+          cat /tmp/server.log; exit 1
+
+      - name: Run DefiLlama adapter against this commit and the deployed service
+        env:
+          DEFILLAMA_ADAPTERS_DIR: /tmp/DefiLlama-Adapters
+          CANDIDATE_ENDPOINT: http://localhost:8080/v1/decompile_mints
+          SOLANA_RPC: ${{ secrets.SOLANA_RPC_URL }}
+        run: npx ts-node --transpileOnly scripts/e2e_defillama.ts
+
+      - name: Server log
+        if: always()
+        run: cat /tmp/server.log
