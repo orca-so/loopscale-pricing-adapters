@@ -19,6 +19,7 @@ const WSOL = "So11111111111111111111111111111111111111112";
 const USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
 export const RATIO_CONVERSION_DATA: { [tokenMint: string]: string } = {
+  "dawn7ZUF7h7anFuEsDdAU1Y3HYwikwqNMAENZsQJdNL": USDC, // USD.infra
   "9J8VvigcjFTkN3jhZH2ieTi2hdGVBVpEXbcA1JDo7QpA": ONYC, // srONyc (senior tranche)
   "HSbdobdvfGAfqKWSWZ7s2XfFx1P1FJutTa96MHJtkm5": ONYC, // PT-srONyc-10JAN27
   "FvQP1fjox2GPSwkEhENuZisz8UeRURLWf7GYF9n2mURD": EUSX, // srEHYUSD (senior tranche)
