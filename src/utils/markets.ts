@@ -1,3 +1,3 @@
-// The tars.loopscale.com edge requires beta access; use the direct Markets host.
+// markets only accepts traffic through the tars load balancer, not the Cloud Run url.
 export const MARKETS_URL =
-  process.env.LOOPSCALE_MARKETS_URL || "https://markets-109615290061.us-central1.run.app";
+  process.env.LOOPSCALE_MARKETS_URL || "https://tars.loopscale.com/v1/markets";
