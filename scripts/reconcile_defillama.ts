@@ -16,9 +16,8 @@
  *
  * Env:
  *   DEFILLAMA_ADAPTERS_DIR   path to a DefiLlama-Adapters checkout with node_modules
- *   LOOPSCALE_MARKETS_URL    Markets service base url (defaults to the Cloud Run url;
- *                            note the tars.loopscale.com edge adds a beta-access gate,
- *                            so go straight to the service)
+ *   LOOPSCALE_MARKETS_URL    Markets service base url (defaults to the tars load balancer;
+ *                            the Cloud Run url no longer accepts direct traffic)
  *   SOLANA_RPC               RPC url used by the adapter (SOLANA_RPC_URL also accepted)
  *   TOTAL_DIVERGENCE_PCT     fail when totals diverge more than this (default 5)
  *   MINT_DIVERGENCE_USD      fail when a single mint diverges more than this (default 250000)
@@ -36,7 +35,7 @@ const PRICE_CHUNK_SIZE = 25;
 // Direct Cloud Run url for the markets service (project bridgesplit-backend,
 // us-central1). The public tars.loopscale.com edge fronts the same service but
 // rejects requests without beta access, so the reconciler skips it.
-const DEFAULT_MARKETS_URL = 'https://markets-109615290061.us-central1.run.app';
+const DEFAULT_MARKETS_URL = 'https://tars.loopscale.com/v1/markets';
 
 const TOTAL_DIVERGENCE_PCT = Number(process.env.TOTAL_DIVERGENCE_PCT || 5);
 const MINT_DIVERGENCE_USD = Number(process.env.MINT_DIVERGENCE_USD || 250_000);

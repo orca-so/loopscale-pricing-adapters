@@ -37,4 +37,5 @@ jobs:
         env:
           DEFILLAMA_ADAPTERS_DIR: /tmp/DefiLlama-Adapters
           SOLANA_RPC: ${{ secrets.SOLANA_RPC_URL }}
+          LOOPSCALE_MARKETS_URL: https://tars.loopscale.com/v1/markets
         run: yarn reconcile
